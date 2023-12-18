@@ -134,6 +134,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bricks.cpp" />
+    <ClCompile Include="controller.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="brick.hpp" />
+    <ClInclude Include="controller.hpp" />
+    <ClInclude Include="object_pool.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
