@@ -13,6 +13,10 @@ public:
 
 	}
 
+	void draw() {
+
+	}
+
 
 private:
 	uint x_;

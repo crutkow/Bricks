@@ -133,12 +133,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="brick.cpp" />
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="brick.hpp" />
+    <ClInclude Include="config.hpp" />
     <ClInclude Include="controller.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="object_pool.hpp" />
