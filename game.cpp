@@ -24,8 +24,16 @@ void Game::draw() {
 	}
 
 	window_.draw(pad_.getShape());
+	window_.draw(ball_.getShape());
 }
 
 void Game::update(sf::Time deltaTime) {
+	sf::Vector2i inputPosition = getMouseInput();
 
+	pad_.move(inputPosition.x);
+	pad_.update(deltaTime);
+}
+
+sf::Vector2i Game::getMouseInput() {
+	return sf::Mouse::getPosition(window_);
 }

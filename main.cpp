@@ -7,8 +7,8 @@ using namespace std;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(BOARD_SIZE_X, BOARD_SIZE_Y), "SFML works!");
-    window.setFramerateLimit(60);
+    sf::RenderWindow window(sf::VideoMode(BOARD_SIZE_X, BOARD_SIZE_Y), "Bricks");
+    window.setFramerateLimit(FRAME_RATE);
 
     sf::Clock clock;
 

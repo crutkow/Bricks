@@ -133,17 +133,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ball.cpp" />
     <ClCompile Include="brick.cpp" />
-    <ClCompile Include="controller.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="pad.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ball.hpp" />
     <ClInclude Include="brick.hpp" />
     <ClInclude Include="config.hpp" />
-    <ClInclude Include="controller.hpp" />
     <ClInclude Include="game.hpp" />
-    <ClInclude Include="object_pool.hpp" />
     <ClInclude Include="pad.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

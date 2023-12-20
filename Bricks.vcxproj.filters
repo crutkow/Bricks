@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -27,14 +24,14 @@
     <ClCompile Include="brick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ball.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="object_pool.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="controller.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="brick.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="pad.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ball.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

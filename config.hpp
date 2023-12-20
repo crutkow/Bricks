@@ -1,5 +1,8 @@
 #pragma once
 
+typedef unsigned int uint;
+
+constexpr unsigned FRAME_RATE = 60;
 constexpr unsigned BRICK_POOL_SIZE = 100;
 constexpr unsigned BRICK_SIZE_X = 40;
 constexpr unsigned BRICK_SIZE_Y = 20;
@@ -11,5 +14,7 @@ constexpr unsigned PAD_SIZE_X = 60;
 constexpr unsigned PAD_SIZE_Y = 20;
 constexpr unsigned PAD_START_POSITION_X = BOARD_SIZE_X / 2 - PAD_SIZE_X / 2;
 constexpr unsigned PAD_START_POSITION_Y = BOARD_SIZE_Y - PAD_SIZE_Y;
-
-typedef unsigned int uint;
+constexpr float    PAD_MOVE_SPEED = 2.0f;
+constexpr unsigned BALL_RADIUS = 10;
+constexpr unsigned BALL_START_POSITION_X = BOARD_SIZE_X / 2 - PAD_SIZE_X / 2;
+constexpr unsigned BALL_START_POSITION_Y = BOARD_SIZE_Y - PAD_SIZE_Y - BALL_RADIUS * 2;
