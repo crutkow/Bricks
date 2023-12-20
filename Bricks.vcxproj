@@ -144,6 +144,7 @@
     <ClInclude Include="controller.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="object_pool.hpp" />
+    <ClInclude Include="pad.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

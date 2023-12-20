@@ -1,10 +1,11 @@
 #pragma once
-
+#include <SFML/Graphics.hpp>
 #include <memory>
+#include <list>
 
 #include "config.hpp"
 #include "brick.hpp"
-#include "object_pool.hpp"
+#include "pad.hpp"
 
 class Game {
 public:
@@ -20,17 +21,18 @@ public:
 		Ending,
 	};
 
-	Game() : state_(State::Starting) {
-		for (int i = 0; i < BRICK_POOL_SIZE; ++i) {
-			brickPool_.put(std::unique_ptr<Brick>(new Brick()));
-		}
+	Game(sf::RenderWindow& window) : window_(window), pad_(PAD_START_POSITION_X, PAD_START_POSITION_Y), state_(State::Starting) {
 	}
 
 	void start();
 
-	void step(float deltaTime);
+	void draw();
+
+	void update(sf::Time deltaTime);
 
 private:
+	sf::RenderWindow& window_;
 	State state_;
-	ObjectPool<Brick> brickPool_;
+	std::list<Brick> bricks_;
+	Pad pad_;
 };

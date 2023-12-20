@@ -2,24 +2,19 @@
 #include <memory>
 
 #include "game.hpp"
-#include "object_pool.hpp"
-#include "controller.hpp"
 
 using namespace std;
 
 int main()
 {
-    Game game;
+    sf::RenderWindow window(sf::VideoMode(BOARD_SIZE_X, BOARD_SIZE_Y), "SFML works!");
+    window.setFramerateLimit(60);
+
+    sf::Clock clock;
+
+    Game game(window);
 
     game.start();
-
-    Controller::instance().fillBrickPool(100);
-
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-
 
     while (window.isOpen())
     {
@@ -30,8 +25,11 @@ int main()
                 window.close();
         }
 
+        sf::Time elapsed = clock.restart();
+        game.update(elapsed);
+
         window.clear();
-        window.draw(shape);
+        game.draw();
         window.display();
     }
 
