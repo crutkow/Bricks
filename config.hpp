@@ -18,3 +18,4 @@ constexpr float    PAD_MOVE_SPEED = 2.0f;
 constexpr unsigned BALL_RADIUS = 10;
 constexpr unsigned BALL_START_POSITION_X = BOARD_SIZE_X / 2 - PAD_SIZE_X / 2;
 constexpr unsigned BALL_START_POSITION_Y = BOARD_SIZE_Y - PAD_SIZE_Y - BALL_RADIUS * 2;
+constexpr float    BALL_MOVE_SPEED = 2.0f;

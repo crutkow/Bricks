@@ -14,6 +14,8 @@ void Game::start() {
 		}
 	}
 
+	ball_.bounce(sf::Vector2f(0.7f, -0.7f));
+
 	state_ = State::Running;
 }
 
@@ -32,6 +34,8 @@ void Game::update(sf::Time deltaTime) {
 
 	pad_.move(inputPosition.x);
 	pad_.update(deltaTime);
+
+	ball_.update(deltaTime);
 }
 
 sf::Vector2i Game::getMouseInput() {
