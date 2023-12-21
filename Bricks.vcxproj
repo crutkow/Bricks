@@ -143,7 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.hpp" />
-    <ClInclude Include="board.hpp" />
     <ClInclude Include="bounding_box.hpp" />
     <ClInclude Include="brick.hpp" />
     <ClInclude Include="config.hpp" />

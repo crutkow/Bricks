@@ -40,4 +40,6 @@ private:
 	std::list<Brick> bricks_;
 	Pad pad_;
 	Ball ball_;
+
+	bool testOutOfBounds(BoundingBox& boundingBox, NormalDirections& normal);
 };

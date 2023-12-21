@@ -25,7 +25,7 @@ public:
 	void update(sf::Time deltaTime);
 
 	sf::Vector2f getPosition() override {
-		return sf::Vector2f((float)x_, (float)y_);
+		return movePosition_;
 	}
 
 	sf::Vector2i getSize() override {
