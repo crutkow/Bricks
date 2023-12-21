@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ball.cpp" />
+    <ClCompile Include="bounding_box.cpp" />
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -142,6 +143,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ball.hpp" />
+    <ClInclude Include="board.hpp" />
+    <ClInclude Include="bounding_box.hpp" />
     <ClInclude Include="brick.hpp" />
     <ClInclude Include="config.hpp" />
     <ClInclude Include="game.hpp" />

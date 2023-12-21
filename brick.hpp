@@ -3,8 +3,9 @@
 #include <memory>
 
 #include "config.hpp"
+#include "bounding_box.hpp"
 
-class Brick {
+class Brick : public BoundingBox {
 public:
 	Brick() : x_(0), y_(0), color_(sf::Color::Red), shape_(sf::Vector2f(BRICK_SIZE_X, BRICK_SIZE_Y)) {
 		setShape();
@@ -20,6 +21,20 @@ public:
 
 	sf::RectangleShape& getShape() {
 		return shape_;
+	}
+
+	sf::Vector2f getPosition() override {
+		return sf::Vector2f((float)x_, (float)y_);
+	}
+
+	sf::Vector2i getSize() override {
+		int x = (int)shape_.getSize().x;
+		int y = (int)shape_.getSize().y;
+		return sf::Vector2i(x, y);
+	}
+
+	sf::Vector2f getCenter() override {
+		return sf::Vector2f((float)x_ - shape_.getSize().x / 2, (float)y_ - shape_.getSize().y / 2);
 	}
 
 protected:

@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "ball.hpp"
 
 void Ball::setShape() {
@@ -5,9 +7,26 @@ void Ball::setShape() {
 	shape_.setPosition((float)x_, (float)y_);
 }
 
-void Ball::bounce(sf::Vector2f direction) {
+void Ball::move(sf::Vector2f direction) {
 	moveDirection_ = direction;
 	isMoving_ = true;
+}
+
+void Ball::bounce(NormalDirections normal) {
+	switch (normal) {
+	case NormalDirections::Up:
+		moveDirection_.y = -abs(moveDirection_.y);
+		break;
+	case NormalDirections::Down:
+		moveDirection_.y = abs(moveDirection_.y);
+		break;
+	case NormalDirections::Left:
+		moveDirection_.x = -abs(moveDirection_.x);
+		break;
+	case NormalDirections::Right:
+		moveDirection_.x = abs(moveDirection_.x);
+		break;
+	}
 }
 
 void Ball::stop() {

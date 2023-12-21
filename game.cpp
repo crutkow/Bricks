@@ -16,7 +16,7 @@ void Game::start() {
 		}
 	}
 
-	ball_.bounce(sf::Vector2f(0.7f, -0.7f));
+	ball_.move(sf::Vector2f(0.0f, -0.7f));
 
 	state_ = State::Running;
 }
@@ -39,6 +39,19 @@ void Game::update(sf::Time deltaTime) {
 	pad_.update(deltaTime);
 
 	ball_.update(deltaTime);
+
+	NormalDirections normal = NormalDirections::Up;
+
+	std::list<Brick>::iterator it;
+	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
+		if (ball_.testOverlap(*it, normal)) {
+			ball_.bounce(normal);
+		}
+	}
+
+	if (ball_.testOverlap(pad_, normal)) {
+		ball_.bounce(normal);
+	}
 }
 
 sf::Vector2i Game::getMouseInput() {
