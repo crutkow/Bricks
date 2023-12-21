@@ -8,7 +8,7 @@
 class Pad : public Brick {
 public:
 	Pad(uint x, uint y) : Brick(x, y, sf::Color::Blue, sf::Vector2f(PAD_SIZE_X, PAD_SIZE_Y)), 
-		isMovingToTarget_(false), targetMoveX_(0), moveX_(x) {
+		isMovingToTarget_(false), targetMoveX_(0), moveX_((float)x) {
 	}
 
 	void move(int targetX);

@@ -2,7 +2,7 @@
 
 void Ball::setShape() {
 	shape_.setFillColor(color_);
-	shape_.setPosition(x_, y_);
+	shape_.setPosition((float)x_, (float)y_);
 }
 
 void Ball::bounce(sf::Vector2f direction) {

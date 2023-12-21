@@ -1,4 +1,6 @@
+#include <iostream>
 #include "game.hpp"
+
 
 void Game::start() {
 	sf::Color colors[] = { sf::Color::Blue, sf::Color::Yellow, sf::Color::Red, sf::Color::Green };
@@ -31,6 +33,7 @@ void Game::draw() {
 
 void Game::update(sf::Time deltaTime) {
 	sf::Vector2i inputPosition = getMouseInput();
+	//std::cout << "input:" << inputPosition.x << "," << inputPosition.y << std::endl;
 
 	pad_.move(inputPosition.x);
 	pad_.update(deltaTime);

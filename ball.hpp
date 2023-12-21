@@ -7,7 +7,7 @@
 class Ball {
 public:
 	Ball(uint x, uint y) : x_(x), y_(y), color_(sf::Color::White), shape_(BALL_RADIUS), 
-		isMoving_(false), movePosition_(sf::Vector2f(x, y)), moveDirection_(sf::Vector2f(0, 0)) {
+		isMoving_(false), movePosition_(sf::Vector2f((float)x, (float)y)), moveDirection_(sf::Vector2f(0, 0)) {
 		setShape();
 	}
 

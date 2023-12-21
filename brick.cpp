@@ -5,5 +5,5 @@ void Brick::setShape() {
 	//shape_.setOutlineThickness(10.f);
 	//shape_.setOutlineColor(sf::Color::White);
 
-	shape_.setPosition(x_, y_);
+	shape_.setPosition((float)x_, (float)y_);
 }
