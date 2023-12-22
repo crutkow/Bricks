@@ -39,6 +39,5 @@ private:
 	Pad pad_;
 	Ball ball_;
 
-	sf::Vector2i getMouseInput();
 	bool testOutOfBounds(BoundingBox& boundingBox, NormalDirections& normal);
 };

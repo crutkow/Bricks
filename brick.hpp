@@ -37,7 +37,7 @@ public:
 		isDisabled_ = !active;
 	}
 
-	bool isDisabled() {
+	bool isDisabled() const {
 		return isDisabled_;
 	}
 

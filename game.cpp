@@ -1,6 +1,8 @@
-#include <iostream>
-#include "game.hpp"
+#define _USE_MATH_DEFINES
 
+#include <iostream>
+#include <cmath>
+#include "game.hpp"
 
 void Game::start() {
 	sf::Color colors[] = { sf::Color::Blue, sf::Color::Yellow, sf::Color::Red, sf::Color::Green };
@@ -15,8 +17,6 @@ void Game::start() {
 			nextColor = nextColor < colorCount - 1 ? nextColor + 1 : 0;
 		}
 	}
-
-	ball_.move(sf::Vector2f(0.7f, -0.7f));
 
 	state_ = State::Running;
 }
@@ -34,12 +34,19 @@ void Game::draw() {
 }
 
 void Game::update(sf::Time deltaTime) {
-	sf::Vector2i inputPosition = getMouseInput();
-	//std::cout << "input:" << inputPosition.x << "," << inputPosition.y << std::endl;
+	sf::Vector2i inputPosition = sf::Mouse::getPosition(window_);
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		if (ball_.isMovingHorizontaly()) {
+			ball_.move(sf::Vector2f((float)cos(M_PI_2 / 2), -(float)sin(M_PI_2 / 2)));
+		}
+	}
 
 	pad_.move(inputPosition.x);
 	pad_.update(deltaTime);
 
+	if (ball_.isMovingHorizontaly()) {
+		ball_.moveHorizontaly(pad_.getCenter().x);
+	}
 	ball_.update(deltaTime);
 
 	NormalDirections normal = NormalDirections::Up;
@@ -58,13 +65,12 @@ void Game::update(sf::Time deltaTime) {
 		}
 	}
 
-	if (ball_.testOverlap(pad_, normal)) {
-		ball_.bounce(normal);
+	if (!ball_.isMovingHorizontaly() && ball_.testOverlap(pad_, normal)) {
+		float factor = abs(ball_.getCenter().x - pad_.getCenter().x) / (PAD_SIZE_X / 2);
+		int sign = ball_.getCenter().x - pad_.getCenter().x < 0 ? -1 : 1;
+		sf::Vector2f moveVector((float)cos(M_PI_2 * (1 - factor)) * sign, -(float)sin(M_PI_2 * (1 - factor)));
+		ball_.move(moveVector);
 	}
-}
-
-sf::Vector2i Game::getMouseInput() {
-	return sf::Mouse::getPosition(window_);
 }
 
 bool Game::testOutOfBounds(BoundingBox& boundingBox, NormalDirections& normal) {

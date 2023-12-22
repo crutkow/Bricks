@@ -7,8 +7,9 @@
 
 class Ball : public BoundingBox {
 public:
-	Ball(uint x, uint y) : x_(x), y_(y), color_(sf::Color::White), shape_(BALL_RADIUS), 
-		isMoving_(false), movePosition_(sf::Vector2f((float)x, (float)y)), moveDirection_(sf::Vector2f(0, 0)) {
+	Ball(uint x, uint y) : color_(sf::Color::White), shape_(BALL_RADIUS), 
+		isMoving_(false), movePosition_(sf::Vector2f((float)x, (float)y)), moveDirection_(sf::Vector2f(0, 0)),
+		isMovingHorizontaly_(true) {
 		makeShape();
 	}
 
@@ -25,7 +26,7 @@ public:
 	}
 
 	sf::Vector2f getCenter() const override {
-		return sf::Vector2f((float)x_ + BALL_RADIUS / 2, (float)y_ + BALL_RADIUS / 2);
+		return sf::Vector2f((float)movePosition_.x + BALL_RADIUS, (float)movePosition_.y + BALL_RADIUS);
 	}
 
 	void move(sf::Vector2f direction);
@@ -34,16 +35,27 @@ public:
 
 	void stop();
 
+	void setMoveHorizontaly(float x);
+
+	void moveHorizontaly(float x);
+
 	void update(sf::Time deltaTime);
+
+	bool isMoving() const {
+		return isMoving_;
+	}
+
+	bool isMovingHorizontaly() const {
+		return isMovingHorizontaly_;
+	}
 
 protected:
 	void makeShape();
 
-	uint x_;
-	uint y_;
 	sf::Color color_;
 	sf::CircleShape shape_;
 	bool isMoving_;
 	sf::Vector2f movePosition_;
 	sf::Vector2f moveDirection_;
+	bool isMovingHorizontaly_;
 };

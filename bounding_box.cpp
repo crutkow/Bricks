@@ -1,11 +1,11 @@
 #include "bounding_box.hpp"
 
 bool BoundingBox::testOverlap(BoundingBox const & boundingBox, NormalDirections& normal) const {
-	sf::Vector2f firstPosition = getPosition();
-	sf::Vector2i firstSize = getSize();
-	sf::Vector2f firstCenter = getCenter();
-	sf::Vector2f secondPosition = boundingBox.getPosition();
-	sf::Vector2i secondSize = boundingBox.getSize();
+	auto firstPosition = getPosition();
+	auto firstSize = getSize();
+	auto firstCenter = getCenter();
+	auto secondPosition = boundingBox.getPosition();
+	auto secondSize = boundingBox.getSize();
 
 	sf::Vector2f firstUpLeftCorner(firstPosition.x, firstPosition.y);
 	sf::Vector2f firstUpRightCorner(firstPosition.x + firstSize.x, firstPosition.y);
