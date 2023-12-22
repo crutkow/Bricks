@@ -54,7 +54,7 @@ void Game::update(sf::Time deltaTime) {
 
 		if (ball_.testOverlap(*it, normal)) {
 			ball_.bounce(normal);
-			it->disable();
+			it->setActive(false);
 		}
 	}
 

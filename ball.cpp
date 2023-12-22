@@ -2,7 +2,7 @@
 
 #include "ball.hpp"
 
-void Ball::setShape() {
+void Ball::makeShape() {
 	shape_.setFillColor(color_);
 	shape_.setPosition((float)x_, (float)y_);
 }

@@ -9,11 +9,23 @@ class Ball : public BoundingBox {
 public:
 	Ball(uint x, uint y) : x_(x), y_(y), color_(sf::Color::White), shape_(BALL_RADIUS), 
 		isMoving_(false), movePosition_(sf::Vector2f((float)x, (float)y)), moveDirection_(sf::Vector2f(0, 0)) {
-		setShape();
+		makeShape();
 	}
 
 	sf::CircleShape& getShape() {
 		return shape_;
+	}
+
+	sf::Vector2f getPosition() const override {
+		return movePosition_;
+	}
+
+	sf::Vector2i getSize() const override {
+		return sf::Vector2i(BALL_RADIUS * 2, BALL_RADIUS * 2);
+	}
+
+	sf::Vector2f getCenter() const override {
+		return sf::Vector2f((float)x_ + BALL_RADIUS / 2, (float)y_ + BALL_RADIUS / 2);
 	}
 
 	void move(sf::Vector2f direction);
@@ -24,20 +36,8 @@ public:
 
 	void update(sf::Time deltaTime);
 
-	sf::Vector2f getPosition() override {
-		return movePosition_;
-	}
-
-	sf::Vector2i getSize() override {
-		return sf::Vector2i(BALL_RADIUS * 2, BALL_RADIUS * 2);
-	}
-
-	sf::Vector2f getCenter() override {
-		return sf::Vector2f((float)x_ + BALL_RADIUS / 2, (float)y_ + BALL_RADIUS / 2);
-	}
-
 protected:
-	void setShape();
+	void makeShape();
 
 	uint x_;
 	uint y_;

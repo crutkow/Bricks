@@ -1,6 +1,6 @@
 #include "bounding_box.hpp"
 
-bool BoundingBox::testOverlap(BoundingBox& boundingBox, NormalDirections& normal) {
+bool BoundingBox::testOverlap(BoundingBox const & boundingBox, NormalDirections& normal) const {
 	sf::Vector2f firstPosition = getPosition();
 	sf::Vector2i firstSize = getSize();
 	sf::Vector2f firstCenter = getCenter();
@@ -35,7 +35,7 @@ bool BoundingBox::testOverlap(BoundingBox& boundingBox, NormalDirections& normal
 	return true;
 }
 
-bool BoundingBox::checkPointIsContained(sf::Vector2f point, BoundingBox& boundingBox) {
+bool BoundingBox::checkPointIsContained(sf::Vector2f point, BoundingBox const & boundingBox) const {
 	auto boxPosition = boundingBox.getPosition();
 	auto boxSize = boundingBox.getSize();
 	if (point.x >= boxPosition.x && point.x < boxPosition.x + boxSize.x &&

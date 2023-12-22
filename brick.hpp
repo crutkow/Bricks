@@ -7,38 +7,34 @@
 
 class Brick : public BoundingBox {
 public:
-	Brick() : x_(0), y_(0), color_(sf::Color::Red), shape_(sf::Vector2f(BRICK_SIZE_X, BRICK_SIZE_Y)), isDisabled_(false) {
-		setShape();
-	}
-
 	Brick(uint x, uint y, sf::Color color) : x_(x), y_(y), color_(color), shape_(sf::Vector2f(BRICK_SIZE_X, BRICK_SIZE_Y)), isDisabled_(false) {
-		setShape();
+		makeShape();
 	}
 
-	Brick(uint x, uint y, sf::Color color, sf::Vector2f shape) : x_(x), y_(y), color_(color), shape_(shape), isDisabled_(false) {
-		setShape();
+	Brick(uint x, uint y, sf::Color color, sf::Vector2f shapeSize) : x_(x), y_(y), color_(color), shape_(shapeSize), isDisabled_(false) {
+		makeShape();
 	}
 
 	sf::RectangleShape& getShape() {
 		return shape_;
 	}
 
-	sf::Vector2f getPosition() override {
+	sf::Vector2f getPosition() const override {
 		return sf::Vector2f((float)x_, (float)y_);
 	}
 
-	sf::Vector2i getSize() override {
+	sf::Vector2i getSize() const override {
 		int x = (int)shape_.getSize().x;
 		int y = (int)shape_.getSize().y;
 		return sf::Vector2i(x, y);
 	}
 
-	sf::Vector2f getCenter() override {
+	sf::Vector2f getCenter() const override {
 		return sf::Vector2f((float)x_ - shape_.getSize().x / 2, (float)y_ - shape_.getSize().y / 2);
 	}
 
-	void disable() {
-		isDisabled_ = true;
+	void setActive(bool active) {
+		isDisabled_ = !active;
 	}
 
 	bool isDisabled() {
@@ -46,7 +42,7 @@ public:
 	}
 
 protected:
-	void setShape();
+	void makeShape();
 
 	uint x_;
 	uint y_;

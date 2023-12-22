@@ -32,8 +32,6 @@ public:
 
 	void update(sf::Time deltaTime);
 
-	sf::Vector2i getMouseInput();
-
 private:
 	sf::RenderWindow& window_;
 	State state_;
@@ -41,5 +39,6 @@ private:
 	Pad pad_;
 	Ball ball_;
 
+	sf::Vector2i getMouseInput();
 	bool testOutOfBounds(BoundingBox& boundingBox, NormalDirections& normal);
 };
