@@ -139,6 +139,7 @@
     <ClCompile Include="brick.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="pad.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +148,9 @@
     <ClInclude Include="brick.hpp" />
     <ClInclude Include="config.hpp" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="menu.hpp" />
     <ClInclude Include="pad.hpp" />
+    <ClInclude Include="screen.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,11 +13,17 @@ enum class NormalDirections {
 
 class BoundingBox {
 public:
+	virtual ~BoundingBox() {}
+
 	virtual sf::Vector2f getPosition() const = 0;
+
 	virtual sf::Vector2i getSize() const = 0;
+
 	virtual sf::Vector2f getCenter() const = 0;
 
 	bool testOverlap(BoundingBox const & boundingBox, NormalDirections &normal) const;
 protected:
+	BoundingBox() {};
+
 	bool checkPointIsContained(sf::Vector2f point, BoundingBox const & boundingBox) const;
 };

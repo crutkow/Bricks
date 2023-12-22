@@ -13,6 +13,8 @@ public:
 		makeShape();
 	}
 
+	~Ball() {}
+
 	sf::CircleShape& getShape() {
 		return shape_;
 	}

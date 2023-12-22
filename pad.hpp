@@ -11,6 +11,8 @@ public:
 		isMovingToTarget_(false), targetMoveX_(0), moveX_((float)x) {
 	}
 
+	~Pad() {}
+
 	sf::Vector2f getPosition() const override {
 		return sf::Vector2f(moveX_, (float)y_);
 	}

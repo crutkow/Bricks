@@ -15,6 +15,8 @@ public:
 		makeShape();
 	}
 
+	~Brick() {}
+
 	sf::RectangleShape& getShape() {
 		return shape_;
 	}

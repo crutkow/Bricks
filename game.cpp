@@ -21,6 +21,10 @@ void Game::start() {
 	state_ = State::Running;
 }
 
+void Game::end() {
+	state_ = State::Starting;
+}
+
 void Game::draw() {
 	std::list<Brick>::iterator it;
 	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
