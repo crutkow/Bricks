@@ -18,11 +18,11 @@ void Game::start() {
 		}
 	}
 
-	state_ = State::Running;
+	state_ = States::Running;
 }
 
 void Game::end() {
-	state_ = State::Starting;
+	state_ = States::Starting;
 }
 
 void Game::draw() {

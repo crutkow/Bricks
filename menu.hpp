@@ -9,7 +9,13 @@
 
 class Menu : public Screen {
 public:
-	Menu(sf::RenderWindow& window) : Screen(window) { }
+	enum class MenuOptions : uint {
+		Play,
+		Quit,
+	};
+
+	Menu(sf::RenderWindow& window) : Screen(window), playTextFrame_(sf::Vector2f(MENU_TEXT_FRAME_SIZE_X, MENU_TEXT_FRAME_SIZE_Y)),
+		quitTextFrame_(sf::Vector2f(MENU_TEXT_FRAME_SIZE_X, MENU_TEXT_FRAME_SIZE_Y)), menuOptionSelected_(MenuOptions::Play) { }
 
 	void start() override;
 
@@ -20,8 +26,13 @@ public:
 	void update(sf::Time deltaTime) override;
 
 private:
-	sf::Font font_;;
+	void makeTexts();
+
+	sf::Font font_;
 	sf::Text titleText_;
 	sf::Text playText_;
 	sf::Text quitText_;
+	sf::RectangleShape playTextFrame_;
+	sf::RectangleShape quitTextFrame_;
+	MenuOptions menuOptionSelected_;
 };

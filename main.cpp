@@ -7,9 +7,9 @@
 
 using namespace std;
 
-enum class Screens {
-    Menu,
-    Game,
+enum class Screens : uint {
+    Menu = 0,
+    Game = 1,
 };
 
 int main()
@@ -38,20 +38,32 @@ int main()
 
         switch (screens[(int)activeScreen]->getState())
         {
-        case Screen::State::Starting:
+        case Screen::States::Starting:
             screens[(int)activeScreen]->start();
             break;
-        case Screen::State::Running:
+        case Screen::States::Running:
             screens[(int)activeScreen]->update(elapsed);
 
             window.clear();
             screens[(int)activeScreen]->draw();
             window.display();
             break;
-        case Screen::State::Ending:
+        case Screen::States::Ending:
             screens[(int)activeScreen]->end();
-            activeScreen = activeScreen == Screens::Menu ? Screens::Game : Screens::Menu;
-            break;
+            switch (activeScreen)
+            {
+            case Screens::Menu:
+                if (screens[(int)activeScreen]->getAction() == Screen::Actions::Quit) window.close();
+                else if (screens[(int)activeScreen]->getAction() == Screen::Actions::Play) activeScreen = Screens::Game;
+                else {/*error*/ }
+                break;
+            case Screens::Game:
+                activeScreen = Screens::Menu;
+                break;
+            default:
+                activeScreen = Screens::Menu;
+                break;
+            }
         }
     }
 

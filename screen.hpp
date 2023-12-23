@@ -6,7 +6,15 @@
 
 class Screen {
 public:
-	enum class State : uint {
+	enum class Actions : uint {
+		None,
+		Win,
+		Loose,
+		Play,
+		Quit,
+	};
+
+	enum class States : uint {
 		Starting,
 		Running,
 		Ending,
@@ -22,13 +30,18 @@ public:
 
 	virtual void update(sf::Time deltaTime) = 0;
 
-	State getState() const {
+	Actions getAction() const {
+		return action_;
+	}
+
+	States getState() const {
 		return state_;
 	}
 
 protected:
-	Screen(sf::RenderWindow& window) : window_(window), state_(State::Starting) { }
+	Screen(sf::RenderWindow& window) : window_(window), action_(Actions::None), state_(States::Starting) { }
 
 	sf::RenderWindow& window_;
-	State state_;
+	Actions action_;
+	States state_;
 };
