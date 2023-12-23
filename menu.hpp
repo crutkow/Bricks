@@ -18,4 +18,10 @@ public:
 	void draw() override;
 
 	void update(sf::Time deltaTime) override;
+
+private:
+	sf::Font font_;;
+	sf::Text titleText_;
+	sf::Text playText_;
+	sf::Text quitText_;
 };
