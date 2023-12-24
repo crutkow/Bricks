@@ -21,9 +21,9 @@ public:
 
 	virtual sf::Vector2f getCenter() const = 0;
 
-	bool testOverlap(BoundingBox const & boundingBox, NormalDirections &normal) const;
+	bool testOverlap(BoundingBox const& boundingBox, NormalDirections& normal) const;
 protected:
 	BoundingBox() {};
 
-	bool checkPointIsContained(sf::Vector2f point, BoundingBox const & boundingBox) const;
+	bool checkPointIsContained(sf::Vector2f point, BoundingBox const& boundingBox) const;
 };

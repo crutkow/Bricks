@@ -18,6 +18,12 @@ void Game::start() {
 		}
 	}
 
+	isGameLost_ = false;
+	isGameWon_ = false;
+
+	pad_ = Pad(PAD_START_POSITION_X, PAD_START_POSITION_Y);
+	ball_ = Ball(BALL_START_POSITION_X, BALL_START_POSITION_Y);
+
 	state_ = States::Running;
 }
 
@@ -35,30 +41,56 @@ void Game::draw() {
 
 	window_.draw(pad_.getShape());
 	window_.draw(ball_.getShape());
+
+	if (isGameWon_) {
+		window_.draw(winText_);
+	}
+	else if (isGameLost_) {
+		window_.draw(loseText_);
+	}
 }
 
 void Game::update(sf::Time deltaTime) {
+	NormalDirections normal = NormalDirections::Up;
+
+	// Input
 	sf::Vector2i inputPosition = sf::Mouse::getPosition(window_);
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (ball_.isMovingHorizontaly()) {
+		if (isGameLost_ || isGameWon_) {
+			state_ = States::Ending;
+		}
+		else if (ball_.isMovingHorizontaly()) {
 			ball_.move(sf::Vector2f((float)cos(M_PI_2 / 2), -(float)sin(M_PI_2 / 2)));
 		}
 	}
 
+	if (isGameLost_ || isGameWon_) {
+		return;
+	}
+
+	// Pad moving
 	pad_.move(inputPosition.x);
 	pad_.update(deltaTime);
 
+	// Ball moving horizontally sticked to pad
 	if (ball_.isMovingHorizontaly()) {
 		ball_.moveHorizontaly(pad_.getCenter().x);
 	}
+
+	// Ball update
 	ball_.update(deltaTime);
 
-	NormalDirections normal = NormalDirections::Up;
-
+	// Ball bouncing of walls
 	if (testOutOfBounds(ball_, normal)) {
-		ball_.bounce(normal);
+		if (normal == NormalDirections::Up) {
+			isGameLost_ = true;
+		}
+		else {
+			ball_.bounce(normal);
+		}
 	}
 
+	// Ball bouncing of bricks
 	std::list<Brick>::iterator it;
 	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
 		if (it->isDisabled()) continue;
@@ -69,6 +101,16 @@ void Game::update(sf::Time deltaTime) {
 		}
 	}
 
+	// Test success, all bricks hit by ball
+	bool isAnyBrickActive = false;
+	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
+		if (!it->isDisabled()) isAnyBrickActive = true;
+	}
+	if (!isAnyBrickActive) {
+		isGameWon_ = true;
+	}
+
+	// Ball bouncing of pad
 	if (!ball_.isMovingHorizontaly() && ball_.testOverlap(pad_, normal)) {
 		float factor = abs(ball_.getCenter().x - pad_.getCenter().x) / (PAD_SIZE_X / 2);
 		int sign = ball_.getCenter().x - pad_.getCenter().x < 0 ? -1 : 1;
@@ -77,7 +119,7 @@ void Game::update(sf::Time deltaTime) {
 	}
 }
 
-bool Game::testOutOfBounds(BoundingBox& boundingBox, NormalDirections& normal) {
+bool Game::testOutOfBounds(BoundingBox const& boundingBox, NormalDirections& normal) {
 	bool isOutOfBounds = false;
 	sf::Vector2f position = boundingBox.getPosition();
 	sf::Vector2i size = boundingBox.getSize();
@@ -101,4 +143,23 @@ bool Game::testOutOfBounds(BoundingBox& boundingBox, NormalDirections& normal) {
 	}
 
 	return isOutOfBounds;
+}
+
+void Game::makeTexts() {
+	if (!font_.loadFromFile("Roboto-Black.ttf"))
+	{
+		// error...
+	}
+
+	winText_.setFont(font_);
+	winText_.setString("SUCCESS");
+	winText_.setCharacterSize(GAME_TEXT_SIZE);
+	winText_.setFillColor(sf::Color::Red);
+	winText_.setPosition(GAME_TEXT_POSITION_X, GAME_TEXT_POSITION_Y);
+
+	loseText_.setFont(font_);
+	loseText_.setString("GAME OVER");
+	loseText_.setCharacterSize(GAME_TEXT_SIZE);
+	loseText_.setFillColor(sf::Color::Red);
+	loseText_.setPosition(GAME_TEXT_POSITION_X, GAME_TEXT_POSITION_Y);
 }

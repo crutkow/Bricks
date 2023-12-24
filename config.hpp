@@ -34,3 +34,6 @@ constexpr unsigned MENU_PLAY_TEXT_FRAME_POSITION_X = 100;
 constexpr unsigned MENU_PLAY_TEXT_FRAME_POSITION_Y = 200;
 constexpr unsigned MENU_QUIT_TEXT_FRAME_POSITION_X = 100;
 constexpr unsigned MENU_QUIT_TEXT_FRAME_POSITION_Y = 250;
+constexpr unsigned GAME_TEXT_SIZE = 40;
+constexpr unsigned GAME_TEXT_POSITION_X = 100;
+constexpr unsigned GAME_TEXT_POSITION_Y = 180;
