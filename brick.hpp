@@ -7,11 +7,13 @@
 
 class Brick : public BoundingBox {
 public:
-	Brick(uint x, uint y, sf::Color color) : x_(x), y_(y), color_(color), shape_(sf::Vector2f(BRICK_SIZE_X, BRICK_SIZE_Y)), isDisabled_(false) {
+	Brick(uint x, uint y, sf::Color color, bool indestructible) : x_(x), y_(y), color_(color), isIndestructible_(indestructible),
+		shape_(sf::Vector2f(BRICK_SIZE_X, BRICK_SIZE_Y)), isDisabled_(false) {
 		makeShape();
 	}
 
-	Brick(uint x, uint y, sf::Color color, sf::Vector2f shapeSize) : x_(x), y_(y), color_(color), shape_(shapeSize), isDisabled_(false) {
+	Brick(uint x, uint y, sf::Color color, sf::Vector2f shapeSize) : x_(x), y_(y), color_(color), isIndestructible_(false),
+		shape_(shapeSize), isDisabled_(false) {
 		makeShape();
 	}
 
@@ -39,6 +41,10 @@ public:
 		isDisabled_ = !active;
 	}
 
+	bool isIndestructible() const {
+		return isIndestructible_;
+	}
+
 	bool isDisabled() const {
 		return isDisabled_;
 	}
@@ -50,5 +56,6 @@ protected:
 	uint y_;
 	sf::Color color_;
 	sf::RectangleShape shape_;
+	bool isIndestructible_;
 	bool isDisabled_;
 };

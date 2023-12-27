@@ -18,6 +18,7 @@ int main()
     window.setFramerateLimit(FRAME_RATE);
 
     sf::Clock clock;
+    bool isWaiting = false;
 
     Screens activeScreen = Screens::Menu;
 
@@ -34,12 +35,22 @@ int main()
                 window.close();
         }
 
+        if (isWaiting) {
+            if (clock.getElapsedTime().asSeconds() >= 0.6f) {
+                clock.restart();
+                isWaiting = false;
+            }
+            else {
+                continue;
+            }
+        }
         sf::Time elapsed = clock.restart();
 
         switch (screens[(int)activeScreen]->getState())
         {
         case Screen::States::Starting:
             screens[(int)activeScreen]->start();
+            isWaiting = true;
             break;
         case Screen::States::Running:
             screens[(int)activeScreen]->update(elapsed);

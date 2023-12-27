@@ -2,20 +2,46 @@
 
 #include <iostream>
 #include <cmath>
+#include <string>
+#include <fstream>
+#include <streambuf>
+
 #include "game.hpp"
 
 void Game::start() {
-	sf::Color colors[] = { sf::Color::Blue, sf::Color::Yellow, sf::Color::Red, sf::Color::Green };
-	const int colorCount = 4;
-	int nextColor = 0;
-
 	bricks_.clear();
 
-	for (int y = 0; y < BRICKS_COUNT_VERTICAL; ++y) {
-		for (int x = 0; x < BRICKS_COUNT_HORIZONTAL; ++x) {
-			bricks_.push_back(Brick(x * BRICK_SIZE_X, (y + 3) * BRICK_SIZE_Y, colors[nextColor]));
-			nextColor = nextColor < colorCount - 1 ? nextColor + 1 : 0;
+	std::string levelString = readLevel("levels/level1.lvl");
+
+	int x = 0;
+	int y = 0;
+	sf::Color color = sf::Color::Red;
+	bool indestructible = false;
+	for (char& c : levelString) {
+		if (c == '\n') {
+			y++;
+			x = 0;
+			continue;
 		}
+		else if (c == '0') {
+			x++;
+			continue;
+		}
+		else if (c == '1') {
+			color = sf::Color::Yellow;
+			indestructible = true;
+		}
+		else if (c == '2') {
+			color = sf::Color::Red;
+			indestructible = false;
+		}
+		else if (c == '3') {
+			color = sf::Color::Magenta;
+			indestructible = false;
+		}
+
+		bricks_.push_back(Brick(BOARD_BOUND_SIZE_X + x * BRICK_SIZE_X, BOARD_BOUND_SIZE_Y + y * BRICK_SIZE_Y, color, indestructible));
+		x++;
 	}
 
 	isGameLost_ = false;
@@ -32,6 +58,10 @@ void Game::end() {
 }
 
 void Game::draw() {
+	window_.draw(leftBound_);
+	window_.draw(rightBound_);
+	window_.draw(topBound_);
+
 	std::list<Brick>::iterator it;
 	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
 		if (it->isDisabled()) continue;
@@ -97,14 +127,16 @@ void Game::update(sf::Time deltaTime) {
 
 		if (ball_.testOverlap(*it, normal)) {
 			ball_.bounce(normal);
-			it->setActive(false);
+			if (!it->isIndestructible()) {
+				it->setActive(false);
+			}
 		}
 	}
 
 	// Test success, all bricks hit by ball
 	bool isAnyBrickActive = false;
 	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
-		if (!it->isDisabled()) isAnyBrickActive = true;
+		if (!it->isDisabled() && !it->isIndestructible()) isAnyBrickActive = true;
 	}
 	if (!isAnyBrickActive) {
 		isGameWon_ = true;
@@ -125,24 +157,34 @@ bool Game::testOutOfBounds(BoundingBox const& boundingBox, NormalDirections& nor
 	sf::Vector2i size = boundingBox.getSize();
 	sf::Vector2f center = boundingBox.getCenter();
 
-	if (position.x < 0) {
+	if (position.x < BOARD_BOUND_SIZE_X) {
 		isOutOfBounds = true;
 		normal = NormalDirections::Right;
 	}
-	else if (position.x + size.x > BOARD_SIZE_X - 1) {
+	else if (position.x + size.x > BOARD_SIZE_X - BOARD_BOUND_SIZE_X - 1) {
 		isOutOfBounds = true;
 		normal = NormalDirections::Left;
 	}
-	else if (position.y < 0) {
+	else if (position.y < BOARD_BOUND_SIZE_Y) {
 		isOutOfBounds = true;
 		normal = NormalDirections::Down;
 	}
-	else if (position.y + size.y > BOARD_SIZE_Y - 1) {
+	else if (position.y + size.y > BOARD_SIZE_Y - BOARD_BOUND_SIZE_Y - 1) {
 		isOutOfBounds = true;
 		normal = NormalDirections::Up;
 	}
 
 	return isOutOfBounds;
+}
+
+void Game::makeBounds() {
+	leftBound_.setFillColor(sf::Color::Blue);
+	leftBound_.setPosition(0, BOARD_BOUND_SIZE_Y);
+
+	rightBound_.setFillColor(sf::Color::Blue);
+	rightBound_.setPosition(BOARD_SIZE_X - BOARD_BOUND_SIZE_X, BOARD_BOUND_SIZE_Y);
+
+	topBound_.setFillColor(sf::Color::Blue);
 }
 
 void Game::makeTexts() {
@@ -162,4 +204,20 @@ void Game::makeTexts() {
 	loseText_.setCharacterSize(GAME_TEXT_SIZE);
 	loseText_.setFillColor(sf::Color::Red);
 	loseText_.setPosition(GAME_TEXT_POSITION_X, GAME_TEXT_POSITION_Y);
+}
+
+std::string Game::readLevel(const std::string path) {
+	std::ifstream levelFile;
+
+	try {
+		levelFile.open(path);
+	}
+	catch (const std::ifstream::failure e) {
+		std::cout << "File not found: " << path << std::endl;
+	}
+
+	std::string str((std::istreambuf_iterator<char>(levelFile)),
+		             std::istreambuf_iterator<char>());
+
+	return str;
 }

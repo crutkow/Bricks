@@ -11,10 +11,14 @@
 
 class Game : public Screen {
 public:
-	Game(sf::RenderWindow& window) : Screen(window), 
+	Game(sf::RenderWindow& window) : Screen(window),
+		leftBound_(sf::Vector2f(BOARD_BOUND_SIZE_X, BOARD_SIZE_Y - BOARD_BOUND_SIZE_Y)),
+		rightBound_(sf::Vector2f(BOARD_BOUND_SIZE_X, BOARD_SIZE_Y - BOARD_BOUND_SIZE_Y)),
+		topBound_(sf::Vector2f(BOARD_SIZE_X, BOARD_BOUND_SIZE_Y)),
 		pad_(PAD_START_POSITION_X, PAD_START_POSITION_Y), 
 		ball_(BALL_START_POSITION_X, BALL_START_POSITION_Y),
 		isGameWon_(false), isGameLost_(false) {
+		makeBounds();
 		makeTexts();
 	}
 
@@ -28,8 +32,13 @@ public:
 
 private:
 	bool testOutOfBounds(BoundingBox const& boundingBox, NormalDirections& normal);
+	void makeBounds();
 	void makeTexts();
+	std::string readLevel(const std::string path);
 
+	sf::RectangleShape leftBound_;
+	sf::RectangleShape rightBound_;
+	sf::RectangleShape topBound_;
 	std::list<Brick> bricks_;
 	Pad pad_;
 	Ball ball_;

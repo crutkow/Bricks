@@ -4,7 +4,7 @@
 #include "pad.hpp"
 
 void Pad::move(int targetX) {
-	if (targetX < PAD_SIZE_X / 2 || targetX > BOARD_SIZE_X - 1 - PAD_SIZE_X / 2) return;
+	if (targetX < BOARD_BOUND_SIZE_X + PAD_SIZE_X / 2 || targetX > BOARD_SIZE_X - BOARD_BOUND_SIZE_X - 1 - PAD_SIZE_X / 2) return;
 
 	targetMoveX_ = targetX - PAD_SIZE_X / 2;
 	isMovingToTarget_ = true;
