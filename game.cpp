@@ -88,6 +88,8 @@ void Game::update(sf::Time deltaTime) {
 		if (drop.testOverlap(pad_, normal)) {
 			drop.setActive(false);
 
+			if (balls_.size() >= DROP_SPAWN_MAX_COUNT) continue;
+
 			std::vector<std::shared_ptr<Ball> > newBalls;
 			for (auto ball : balls_) {
 				auto newBall = std::shared_ptr<Ball>(new Ball((uint)ball->getCenter().x, (uint)ball->getCenter().y));
@@ -188,7 +190,7 @@ void Game::startLevel(int level) {
 			indestructible = true;
 		}
 		else if (c == '2') {
-			color = sf::Color::Red;
+			color = sf::Color::Green;
 			indestructible = false;
 		}
 		else if (c == '3') {
