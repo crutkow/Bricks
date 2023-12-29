@@ -3,6 +3,7 @@
 typedef unsigned int uint;
 
 constexpr unsigned FRAME_RATE = 60;
+constexpr unsigned LEVEL_COUNT = 2;
 constexpr unsigned BOARD_SIZE_X = 1000;
 constexpr unsigned BOARD_SIZE_Y = 1000;
 constexpr unsigned BOARD_BOUND_SIZE_X = 100;
@@ -16,11 +17,17 @@ constexpr unsigned PAD_SIZE_X = 160;
 constexpr unsigned PAD_SIZE_Y = 40;
 constexpr unsigned PAD_START_POSITION_X = BOARD_SIZE_X / 2 - PAD_SIZE_X / 2;
 constexpr unsigned PAD_START_POSITION_Y = BOARD_SIZE_Y - PAD_SIZE_Y - BOARD_BOUND_SIZE_Y;
-constexpr float    PAD_MOVE_SPEED = 5.0f;
-constexpr unsigned BALL_RADIUS = 10;
+constexpr float    PAD_MOVE_SPEED = 6.0f;
+constexpr unsigned BALL_RADIUS = 8;
 constexpr unsigned BALL_START_POSITION_X = BOARD_SIZE_X / 2 - PAD_SIZE_X / 2;
 constexpr unsigned BALL_START_POSITION_Y = PAD_START_POSITION_Y - BALL_RADIUS * 2;
-constexpr float    BALL_MOVE_SPEED = 6.0f;
+constexpr float    BALL_MOVE_SPEED = 8.0f;
+constexpr unsigned DROP_SIZE_X = 40;
+constexpr unsigned DROP_SIZE_Y = 40;
+constexpr unsigned DROP_CIRCLE_RADIUS = 8;
+constexpr unsigned DROP_CIRCLE_COUNT = 3;
+constexpr float    DROP_MOVE_SPEED = 3.0f;
+constexpr float    DROP_SPAWN_RATE = 0.2f;
 constexpr unsigned MENU_TITLE_TEXT_SIZE = 50;
 constexpr unsigned MENU_TITLE_TEXT_POSITION_X = 120;
 constexpr unsigned MENU_TITLE_TEXT_POSITION_Y = 50;

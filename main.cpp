@@ -26,6 +26,8 @@ int main()
     screens.push_back(std::unique_ptr<Screen>(new Menu(window)));
     screens.push_back(std::unique_ptr<Screen>(new Game(window)));
 
+    int currentLevel = 1;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -49,7 +51,7 @@ int main()
         switch (screens[(int)activeScreen]->getState())
         {
         case Screen::States::Starting:
-            screens[(int)activeScreen]->start();
+            screens[(int)activeScreen]->start(currentLevel);
             isWaiting = true;
             break;
         case Screen::States::Running:
@@ -66,10 +68,16 @@ int main()
             case Screens::Menu:
                 if (screens[(int)activeScreen]->getAction() == Screen::Actions::Quit) window.close();
                 else if (screens[(int)activeScreen]->getAction() == Screen::Actions::Play) activeScreen = Screens::Game;
-                else {/*error*/ }
                 break;
             case Screens::Game:
-                activeScreen = Screens::Menu;
+                if (screens[(int)activeScreen]->getAction() == Screen::Actions::Loose) activeScreen = Screens::Menu;
+                else if (screens[(int)activeScreen]->getAction() == Screen::Actions::Win) {
+                    currentLevel++;
+                    if (currentLevel > LEVEL_COUNT) {
+                        activeScreen = Screens::Menu;
+                        currentLevel = 0;
+                    }
+                }
                 break;
             default:
                 activeScreen = Screens::Menu;

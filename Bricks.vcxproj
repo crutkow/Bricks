@@ -142,6 +142,7 @@
     <ClCompile Include="ball.cpp" />
     <ClCompile Include="bounding_box.cpp" />
     <ClCompile Include="brick.cpp" />
+    <ClCompile Include="drop.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="bounding_box.hpp" />
     <ClInclude Include="brick.hpp" />
     <ClInclude Include="config.hpp" />
+    <ClInclude Include="drop.hpp" />
     <ClInclude Include="game.hpp" />
     <ClInclude Include="menu.hpp" />
     <ClInclude Include="pad.hpp" />

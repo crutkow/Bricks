@@ -4,14 +4,170 @@
 #include <cmath>
 #include <string>
 #include <fstream>
+#include <ostream>
 #include <streambuf>
+#include <time.h>
 
 #include "game.hpp"
 
-void Game::start() {
-	bricks_.clear();
+void Game::start(int arg) {
+	srand((unsigned)time(NULL));
 
-	std::string levelString = readLevel("levels/level1.lvl");
+	startLevel(arg);
+
+	action_ = Actions::None;
+	state_ = States::Running;
+}
+
+void Game::end() {
+	state_ = States::Starting;
+}
+
+void Game::draw() {
+	window_.draw(leftBound_);
+	window_.draw(rightBound_);
+	window_.draw(topBound_);
+
+	for (auto& brick : bricks_) {
+		if (brick.isDisabled()) continue;
+
+		window_.draw(brick.getShape());
+	}
+
+	for (auto ball : balls_) {
+		window_.draw(ball->getShape());
+	}
+
+	window_.draw(pad_.getShape());
+
+	for (auto& drop : drops_) {
+		if (drop.isDisabled()) continue;
+
+		window_.draw(drop.getShape());
+		for (int i = 0; i < DROP_CIRCLE_COUNT; ++i) {
+			window_.draw(drop.getCircleShape(i));
+		}
+	}
+
+	if (action_ == Actions::Win) {
+		window_.draw(winText_);
+	}
+	else if (action_ == Actions::Loose) {
+		window_.draw(loseText_);
+	}
+}
+
+void Game::update(sf::Time deltaTime) {
+	NormalDirections normal = NormalDirections::Up;
+
+	// Input
+	sf::Vector2i inputPosition = sf::Mouse::getPosition(window_);
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		if (action_ == Actions::Win || action_ == Actions::Loose) {
+			state_ = States::Ending;
+		}
+		else if (firstBall_->isMovingHorizontaly()) {
+			firstBall_->move(sf::Vector2f(0, -1));
+		}
+	}
+
+	if (action_ == Actions::Win || action_ == Actions::Loose) {
+		return;
+	}
+
+	// Pad moving
+	pad_.move(inputPosition.x);
+	pad_.update(deltaTime);
+
+	// Drops update
+	for (auto& drop : drops_) {
+		if (drop.isDisabled()) continue;
+
+		drop.update(deltaTime);
+
+		if (drop.testOverlap(pad_, normal)) {
+			drop.setActive(false);
+
+			std::vector<std::shared_ptr<Ball> > newBalls;
+			for (auto ball : balls_) {
+				auto newBall = std::shared_ptr<Ball>(new Ball((uint)ball->getCenter().x, (uint)ball->getCenter().y));
+				newBall->move(sf::Vector2f((float)cos(M_PI_4), -(float)sin(M_PI_4)));
+				newBalls.push_back(newBall);
+				newBall = std::shared_ptr<Ball>(new Ball((uint)ball->getCenter().x, (uint)ball->getCenter().y));
+				newBall->move(sf::Vector2f(-(float)cos(M_PI_4), -(float)sin(M_PI_4)));
+				newBalls.push_back(newBall);
+			}
+			balls_.insert(balls_.end(), newBalls.begin(), newBalls.end());
+		}
+	}
+
+	// First ball moving horizontally sticked to pad
+	if (firstBall_->isMovingHorizontaly()) {
+		firstBall_->moveHorizontaly(pad_.getCenter().x);
+	}
+
+	// Balls update
+	std::vector<std::shared_ptr<Ball> > removeBalls;
+	for (auto ball : balls_) {
+		ball->update(deltaTime);
+
+		if (testOutOfBounds(*ball, normal)) {
+			if (normal == NormalDirections::Up) {
+				removeBalls.push_back(ball);
+			}
+			else {
+				ball->bounce(normal);
+			}
+		}
+	}
+	for (auto removeBall : removeBalls) {
+		balls_.remove(removeBall);
+	}
+
+	if (balls_.empty()) {
+		action_ = Actions::Loose;
+	}
+
+	// Bricks update
+	bool anyBrickActive = false;
+	for (auto& brick : bricks_) {
+		if (!brick.isDisabled() && !brick.isIndestructible()) anyBrickActive = true;
+
+		if (brick.isDisabled()) continue;
+
+		for (auto ball : balls_) {
+			if (ball->testOverlap(brick, normal)) {
+				ball->bounce(normal);
+				if (!brick.isIndestructible()) {
+					brick.setActive(false);
+					spawnDropChance((uint)brick.getPosition().x, (uint)brick.getPosition().y);
+				}
+			}
+		}
+	}
+
+	if (!anyBrickActive) {
+		action_ = Actions::Win;
+	}
+
+	// Balls bouncing of pad
+	for (auto ball : balls_) {
+		if (!ball->isMovingHorizontaly() && ball->testOverlap(pad_, normal)) {
+			float factor = abs(ball->getCenter().x - pad_.getCenter().x) / (PAD_SIZE_X / 2);
+			int sign = ball->getCenter().x - pad_.getCenter().x < 0 ? -1 : 1;
+			sf::Vector2f moveVector((float)cos(M_PI_2 * (1 - factor)) * sign, -(float)sin(M_PI_2 * (1 - factor)));
+			ball->move(moveVector);
+		}
+	}
+}
+
+void Game::startLevel(int level) {
+	char buff[256];
+	snprintf(buff, sizeof(buff), "levels/level%d.lvl", level);
+	std::string levelPath = buff;
+	std::string levelString = readLevel(levelPath);
+
+	bricks_.clear();
 
 	int x = 0;
 	int y = 0;
@@ -44,111 +200,29 @@ void Game::start() {
 		x++;
 	}
 
-	isGameLost_ = false;
-	isGameWon_ = false;
+	drops_.clear();
+
+	balls_.clear();
+	firstBall_ = std::shared_ptr<Ball>(new Ball(BALL_START_POSITION_X, BALL_START_POSITION_Y));
+	balls_.push_back(firstBall_);
 
 	pad_ = Pad(PAD_START_POSITION_X, PAD_START_POSITION_Y);
-	ball_ = Ball(BALL_START_POSITION_X, BALL_START_POSITION_Y);
-
-	state_ = States::Running;
 }
 
-void Game::end() {
-	state_ = States::Starting;
-}
+std::string Game::readLevel(const std::string path) {
+	std::ifstream levelFile;
 
-void Game::draw() {
-	window_.draw(leftBound_);
-	window_.draw(rightBound_);
-	window_.draw(topBound_);
-
-	std::list<Brick>::iterator it;
-	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
-		if (it->isDisabled()) continue;
-
-		window_.draw(it->getShape());
+	try {
+		levelFile.open(path);
+	}
+	catch (const std::ifstream::failure e) {
+		std::cout << "File not found: " << path << std::endl;
 	}
 
-	window_.draw(pad_.getShape());
-	window_.draw(ball_.getShape());
+	std::string str((std::istreambuf_iterator<char>(levelFile)),
+		std::istreambuf_iterator<char>());
 
-	if (isGameWon_) {
-		window_.draw(winText_);
-	}
-	else if (isGameLost_) {
-		window_.draw(loseText_);
-	}
-}
-
-void Game::update(sf::Time deltaTime) {
-	NormalDirections normal = NormalDirections::Up;
-
-	// Input
-	sf::Vector2i inputPosition = sf::Mouse::getPosition(window_);
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (isGameLost_ || isGameWon_) {
-			state_ = States::Ending;
-		}
-		else if (ball_.isMovingHorizontaly()) {
-			ball_.move(sf::Vector2f((float)cos(M_PI_2 / 2), -(float)sin(M_PI_2 / 2)));
-		}
-	}
-
-	if (isGameLost_ || isGameWon_) {
-		return;
-	}
-
-	// Pad moving
-	pad_.move(inputPosition.x);
-	pad_.update(deltaTime);
-
-	// Ball moving horizontally sticked to pad
-	if (ball_.isMovingHorizontaly()) {
-		ball_.moveHorizontaly(pad_.getCenter().x);
-	}
-
-	// Ball update
-	ball_.update(deltaTime);
-
-	// Ball bouncing of walls
-	if (testOutOfBounds(ball_, normal)) {
-		if (normal == NormalDirections::Up) {
-			isGameLost_ = true;
-		}
-		else {
-			ball_.bounce(normal);
-		}
-	}
-
-	// Ball bouncing of bricks
-	std::list<Brick>::iterator it;
-	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
-		if (it->isDisabled()) continue;
-
-		if (ball_.testOverlap(*it, normal)) {
-			ball_.bounce(normal);
-			if (!it->isIndestructible()) {
-				it->setActive(false);
-			}
-		}
-	}
-
-	// Test success, all bricks hit by ball
-	bool isAnyBrickActive = false;
-	for (it = bricks_.begin(); it != bricks_.end(); ++it) {
-		if (!it->isDisabled() && !it->isIndestructible()) isAnyBrickActive = true;
-	}
-	if (!isAnyBrickActive) {
-		isGameWon_ = true;
-	}
-
-	// Ball bouncing of pad
-	if (!ball_.isMovingHorizontaly() && ball_.testOverlap(pad_, normal)) {
-		float factor = abs(ball_.getCenter().x - pad_.getCenter().x) / (PAD_SIZE_X / 2);
-		int sign = ball_.getCenter().x - pad_.getCenter().x < 0 ? -1 : 1;
-		sf::Vector2f moveVector((float)cos(M_PI_2 * (1 - factor)) * sign, -(float)sin(M_PI_2 * (1 - factor)));
-		ball_.move(moveVector);
-	}
+	return str;
 }
 
 bool Game::testOutOfBounds(BoundingBox const& boundingBox, NormalDirections& normal) {
@@ -169,7 +243,7 @@ bool Game::testOutOfBounds(BoundingBox const& boundingBox, NormalDirections& nor
 		isOutOfBounds = true;
 		normal = NormalDirections::Down;
 	}
-	else if (position.y + size.y > BOARD_SIZE_Y - BOARD_BOUND_SIZE_Y - 1) {
+	else if (position.y + size.y > BOARD_SIZE_Y - 1) {
 		isOutOfBounds = true;
 		normal = NormalDirections::Up;
 	}
@@ -206,18 +280,10 @@ void Game::makeTexts() {
 	loseText_.setPosition(GAME_TEXT_POSITION_X, GAME_TEXT_POSITION_Y);
 }
 
-std::string Game::readLevel(const std::string path) {
-	std::ifstream levelFile;
+void Game::spawnDropChance(uint x, uint y) {
+	float random = (rand() % 100) / 100.0f;
 
-	try {
-		levelFile.open(path);
+	if (random <= DROP_SPAWN_RATE) {
+		drops_.push_back(Drop(x, y));
 	}
-	catch (const std::ifstream::failure e) {
-		std::cout << "File not found: " << path << std::endl;
-	}
-
-	std::string str((std::istreambuf_iterator<char>(levelFile)),
-		             std::istreambuf_iterator<char>());
-
-	return str;
 }

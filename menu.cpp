@@ -29,7 +29,7 @@ void Menu::makeTexts() {
 	quitTextFrame_.setFillColor(sf::Color::Yellow);
 }
 
-void Menu::start() {
+void Menu::start(int arg) {
 	makeTexts();
 	state_ = States::Running;
 }

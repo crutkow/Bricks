@@ -22,7 +22,7 @@ public:
 
 	~Screen() {}
 
-	virtual void start() = 0;
+	virtual void start(int arg) = 0;
 
 	virtual void end() = 0;
 
