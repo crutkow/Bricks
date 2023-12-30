@@ -17,6 +17,7 @@ public:
 		leftBound_(sf::Vector2f(BOARD_BOUND_SIZE_X, BOARD_SIZE_Y - BOARD_BOUND_SIZE_Y)),
 		rightBound_(sf::Vector2f(BOARD_BOUND_SIZE_X, BOARD_SIZE_Y - BOARD_BOUND_SIZE_Y)),
 		topBound_(sf::Vector2f(BOARD_SIZE_X, BOARD_BOUND_SIZE_Y)),
+		textFrame_(sf::Vector2f(GAME_TEXT_FRAME_SIZE_X, GAME_TEXT_FRAME_SIZE_Y)),
 		pad_(PAD_START_POSITION_X, PAD_START_POSITION_Y) {
 		makeBounds();
 		makeTexts();
@@ -44,6 +45,7 @@ private:
 	sf::Font font_;
 	sf::Text winText_;
 	sf::Text loseText_;
+	sf::RectangleShape textFrame_;
 	Pad pad_;
 	std::vector<Brick> bricks_;
 	std::list<std::shared_ptr<Ball> > balls_;

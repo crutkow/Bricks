@@ -50,9 +50,11 @@ void Game::draw() {
 	}
 
 	if (action_ == Actions::Win) {
+		window_.draw(textFrame_);
 		window_.draw(winText_);
 	}
 	else if (action_ == Actions::Loose) {
+		window_.draw(textFrame_);
 		window_.draw(loseText_);
 	}
 }
@@ -266,7 +268,7 @@ void Game::makeBounds() {
 void Game::makeTexts() {
 	if (!font_.loadFromFile("Roboto-Black.ttf"))
 	{
-		// error...
+		return;
 	}
 
 	winText_.setFont(font_);
@@ -280,6 +282,9 @@ void Game::makeTexts() {
 	loseText_.setCharacterSize(GAME_TEXT_SIZE);
 	loseText_.setFillColor(sf::Color::Red);
 	loseText_.setPosition(GAME_TEXT_POSITION_X, GAME_TEXT_POSITION_Y);
+
+    textFrame_.setPosition(sf::Vector2f(GAME_TEXT_FRAME_POSITION_X, GAME_TEXT_FRAME_POSITION_Y));
+	textFrame_.setFillColor(sf::Color::Black);
 }
 
 void Game::spawnDropChance(uint x, uint y) {

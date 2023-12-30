@@ -3,7 +3,7 @@
 void Menu::makeTexts() {
 	if (!font_.loadFromFile("Roboto-Black.ttf"))
 	{
-		// error...
+		return;
 	}
 
 	titleText_.setFont(font_);
